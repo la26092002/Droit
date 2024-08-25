@@ -1,0 +1,45 @@
+const express = require('express');
+const router = express.Router();
+const { check, validationResult } = require("express-validator");
+
+const Company = require("../../models/Company");
+require('dotenv').config();
+
+//@route    POST api/company
+//@desc     Test route
+//@access   Public
+router.post(
+    "/",
+    [
+        check("name", "name is required").not().isEmpty(),
+        check("firstPersonName", "firstPersonName is required").not().isEmpty(),
+        check("email", "email is required").not().isEmpty(),
+        check("numberPhone", "numberPhone is required").isMobilePhone(),
+        check("message", "message is required").not().isEmpty(),
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(401).json({ errors: errors.array() });
+        }
+
+        const { name, firstPersonName, email, numberPhone, message } = req.body;
+        try {
+
+            const newCompany = new Company({
+                name, firstPersonName, email, numberPhone, message
+            })
+            const company = await newCompany.save();
+            res.json(company);
+            
+        } catch (err) {
+            console.log(err.message);
+            res.status(500).send("Server error");
+        }
+
+    }
+);
+
+
+
+module.exports = router;

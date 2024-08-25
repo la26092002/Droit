@@ -4,6 +4,7 @@ const connectDB = require('./config/db');
 const cors = require('cors')
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const compression = require('compression')
 
 
 
@@ -22,6 +23,8 @@ app.use(express.json());
 app.use(helmet());
 
 
+app.use(compression())
+
 //rateLimit
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -35,6 +38,7 @@ app.use(limiter);
 app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/DataInserted', require('./routes/api/insertedData'));
 app.use('/api/consultation', require('./routes/api/consultation'));
+app.use('/api/company', require('./routes/api/company'));
 
 
 const PORT = process.env.PORT || 5000;
