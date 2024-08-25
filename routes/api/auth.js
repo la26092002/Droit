@@ -47,7 +47,7 @@ router.post(
 
             jwt.sign(
                 payload,
-                process.env.jwtSecret,
+                process.env.jwtSecret  || "mysecrettoken",
                 (err, token) => {
                     if (err) throw err;
                     res.json({ token });
@@ -118,7 +118,7 @@ router.post(
 
             jwt.sign(
                 payload,
-                process.env.jwtSecret,
+                process.env.jwtSecret  || "mysecrettoken",
                 (err, token) => {
                     if (err) throw err;
                     res.json({ token });
