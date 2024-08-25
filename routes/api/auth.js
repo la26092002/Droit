@@ -39,6 +39,7 @@ router.post(
                 return res.status(403).json({ errors: [{ msg: 'Invalid Credentials 2' }] })
             }
 
+            
             const payload = {
                 actor1: {
                     id: actor.id,
@@ -108,7 +109,7 @@ router.post(
 
             actor1.password = await bcrypt.hash(password, salt);
 
-            actor1.save();
+            await actor1.save(); // Await saving the actor1 document
 
             const payload = {
                 actor1: {
