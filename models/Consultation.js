@@ -24,7 +24,7 @@ const ConsultationSchema = new mongoose.Schema({
     },
     status: {
         type: Boolean,
-        default: Date.now
+        default: false
     },
     date: {
         type: Date,
