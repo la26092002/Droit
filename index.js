@@ -34,6 +34,8 @@ app.use(limiter);
 // Define Routes
 app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/DataInserted', require('./routes/api/insertedData'));
+app.use('/api/consultation', require('./routes/api/consultation'));
+
 
 const PORT = process.env.PORT || 5000;
 
