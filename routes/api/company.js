@@ -42,4 +42,20 @@ router.post(
 
 
 
+//@route    GET /api/company
+//@desc     Get all company
+//@access   Public
+router.get('/', async (req, res) => {
+
+    try {
+        company = await Company.find().sort({ date: -1 });
+        return res.status(200).json(company);
+    } catch (err) {
+        console.error(err.message)
+        res.status(500).send('server Error');
+    }
+});
+
+
+
 module.exports = router;
