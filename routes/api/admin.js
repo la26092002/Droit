@@ -14,7 +14,7 @@ const auth = require('../../middleware/auth')
 //@desc     Test route
 //@access   Public
 router.post(
-    "/",
+    "/auth",
     [
         check("numberPhone", "Please include a valid phone number").isMobilePhone(),
         check("password", "Password is required").exists()
@@ -72,9 +72,9 @@ router.post(
 //@access   Public
 //firstName/lastName/birthday/professionalCardNumber/judicialCouncil/role
 router.post(
-    "/adminRegister",
+    "/register",
     [
-        check("name", "firstName is required").not().isEmpty(), //To be there and not empty  
+        check("name", "name is required").not().isEmpty(), //To be there and not empty  
         check("numberPhone", "Please include a valid phone number").isMobilePhone(),
         check("email", "Please include a valid email").isEmail(),
         check("password", "Please enter a password with 6 or more char").isLength({
@@ -97,7 +97,7 @@ router.post(
                     .json({ errors: [{ msg: "Actor1 already exists" }] });
             }
 
-            actor1 = new Actor1({
+            actor1 = new Admin({
                 name, email, password, numberPhone
             });
 
