@@ -93,7 +93,7 @@ router.post(
 
             if (actor1) {
                 return res
-                    .status(400)
+                    .status(201)
                     .json({ errors: [{ msg: "Actor1 already exists" }] });
             }
 
@@ -118,7 +118,7 @@ router.post(
                 process.env.jwtSecret  || "mysecrettoken",
                 (err, token) => {
                     if (err) throw err;
-                    res.json({ token });
+                    res.json({ token,name,numberPhone,email });
                 }
             );
         } catch (err) {
