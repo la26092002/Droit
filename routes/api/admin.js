@@ -34,6 +34,7 @@ router.post(
                     .status(402)
                     .json({ errors: [{ msg: "Invalid Credentials 1" }] });
             }
+            const {name,email}=actor;
 
             const isMatch = await bcrypt.compare(password, actor.password)
             if (!isMatch) {
@@ -52,7 +53,7 @@ router.post(
                 process.env.jwtSecret  || "mysecrettoken",
                 (err, token) => {
                     if (err) throw err;
-                    res.json({ token });
+                    res.json({ token ,name,numberPhone,email});
                 }
             );
         } catch (err) {
