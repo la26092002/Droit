@@ -5,11 +5,14 @@ const { check, validationResult } = require("express-validator");
 const Consultation = require("../../models/Consultation");
 require('dotenv').config();
 
+const authAdmin = require('../../middleware/authAdmin')
+
 //@route    POST api/consultation
 //@desc     Test route
 //@access   Public
 router.post(
     "/",
+    authAdmin,
     [
         check("name", "name is required").not().isEmpty(),
         check("email", "email is required").not().isEmpty(),
@@ -46,7 +49,7 @@ router.post(
 //@route    GET /api/consultation
 //@desc     Get all consultations
 //@access   Public
-router.get('/', async (req, res) => {
+router.get('/',authAdmin ,async (req, res) => {
 
     try {
         consultation = await Consultation.find().sort({ date: -1 });

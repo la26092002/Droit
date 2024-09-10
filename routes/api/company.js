@@ -5,11 +5,13 @@ const { check, validationResult } = require("express-validator");
 const Company = require("../../models/Company");
 require('dotenv').config();
 
+const authAdmin = require('../../middleware/authAdmin')
+
 //@route    POST api/company
 //@desc     Test route
 //@access   Public
 router.post(
-    "/",
+    "/", authAdmin,
     [
         check("name", "name is required").not().isEmpty(),
         check("firstPersonName", "firstPersonName is required").not().isEmpty(),
@@ -31,7 +33,7 @@ router.post(
             })
             const company = await newCompany.save();
             res.json(company);
-            
+
         } catch (err) {
             console.log(err.message);
             res.status(500).send("Server error");
@@ -45,7 +47,7 @@ router.post(
 //@route    GET /api/company
 //@desc     Get all company
 //@access   Public
-router.get('/', async (req, res) => {
+router.get('/', authAdmin, async (req, res) => {
 
     try {
         company = await Company.find().sort({ date: -1 });
