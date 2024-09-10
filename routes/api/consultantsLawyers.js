@@ -12,8 +12,8 @@ require('dotenv').config();
 const authAdmin = require('../../middleware/authAdmin')
 
 
-//@route    Get api/consultantsLawyers/:querry
-//@desc     Get profile by user ID
+//@route    Get api/consultantsLawyers/:query
+//@desc     Get consultantsLawyers by query
 //@access   Public
 router.get("/:query", authAdmin
     , async (req, res) => {
@@ -52,6 +52,30 @@ router.get("/:query", authAdmin
 
             // Find actors based on the search criteria
             const actors = await Actor1.find(searchCriteria).select('-password');
+            if (!actors) {
+                return res.status(400).json({ msg: "There is no users" });
+            }
+
+            res.json(actors);
+        } catch (err) {
+            console.error(err.message);
+            if (err.kind == "ObjectId") {
+                return res.status(400).json({ msg: "users not found" });
+            }
+            res.status(500).send("Server Error");
+        }
+    });
+
+
+
+    //@route    Get api/consultantsLawyers
+//@desc     Get All
+//@access   Public
+router.get("/", authAdmin
+    , async (req, res) => {
+        try {
+            // Find actors based on the search criteria
+            const actors = await Actor1.find().select('-password');
             if (!actors) {
                 return res.status(400).json({ msg: "There is no users" });
             }
