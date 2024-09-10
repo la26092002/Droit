@@ -12,7 +12,6 @@ const authAdmin = require('../../middleware/authAdmin')
 //@access   Public
 router.post(
     "/",
-    authAdmin,
     [
         check("name", "name is required").not().isEmpty(),
         check("email", "email is required").not().isEmpty(),
