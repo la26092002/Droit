@@ -40,7 +40,9 @@ app.use('/api/DataInserted', require('./routes/api/insertedData'));
 app.use('/api/consultation', require('./routes/api/consultation'));
 app.use('/api/company', require('./routes/api/company'));
 app.use('/api/admin', require('./routes/api/admin'));
-//
+
+app.use('/api/consultantsLawyers', require('./routes/api/consultantsLawyers'));
+//consultantsLawyers
 
 
 const PORT = process.env.PORT || 5000;
