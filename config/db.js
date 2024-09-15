@@ -5,7 +5,11 @@ const db = process.env.mongoURI || "mongodb+srv://larbi26:yTpyUiVqGi2vRj98@clust
 
 const connectDB = async () => {
     try {
-        await mongoose.connect(db)
+        await mongoose.connect(db, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            connectTimeoutMS: 30000, // Increase timeout to 30 seconds
+          })
 
         //console.log("Mongo URI:", db);
 

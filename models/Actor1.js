@@ -39,9 +39,21 @@ const Acor1Schema = new mongoose.Schema({
         ref: 'role'
     },
     status: {
-        type: Date,
-        require: false
+        type: Boolean,
+        default: false,
     },
+    subscribes: [
+        {
+            from: {
+                type: Date,
+                required: true
+            },
+            to: {
+                type: Date,
+                required: true
+            },
+        }
+    ],
     date: {
         type: Date,
         default: Date.now

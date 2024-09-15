@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 const Actor1 = require("../../models/Actor1");
 require('dotenv').config();
 
-const auth = require('../../middleware/auth')
+//const auth = require('../../middleware/auth')
 
 //@route    POST api/auth
 //@desc     Test route
@@ -31,15 +31,15 @@ router.post(
             if (!actor) {
                 return res
                     .status(402)
-                    .json({ errors: [{ msg: "Invalid Credentials 1" }] });
+                    .json({ errors: [{ msg: "user not exist" }] });
             }
 
             const isMatch = await bcrypt.compare(password, actor.password)
             if (!isMatch) {
-                return res.status(403).json({ errors: [{ msg: 'Invalid Credentials 2' }] })
+                return res.status(403).json({ errors: [{ msg: 'password incorect' }] })
             }
 
-            
+
             const payload = {
                 actor1: {
                     id: actor.id,
@@ -48,10 +48,10 @@ router.post(
 
             jwt.sign(
                 payload,
-                process.env.jwtSecret  || "mysecrettoken",
+                process.env.jwtSecret || "mysecrettoken",
                 (err, token) => {
                     if (err) throw err;
-                    res.json({ token });
+                    res.status(200).json({ token });
                 }
             );
         } catch (err) {
@@ -75,7 +75,6 @@ router.post(
     [
         check("firstName", "firstName is required").not().isEmpty(), //To be there and not empty  
         check("lastName", "lastName is required").not().isEmpty(), //To be there and not empty  
-        check("birthday", "birthday is required").not().isEmpty(), //To be there and not empty  
         check("professionalCardNumber", "professionalCardNumber is required").not().isEmpty(), //To be there and not empty  
         check("judicialCouncil", "judicialCouncil is required").not().isEmpty(), //To be there and not empty  
         check("role", "role is required").not().isEmpty(), //To be there and not empty  
@@ -91,18 +90,19 @@ router.post(
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { firstName, lastName, email, password, numberPhone, judicialCouncil,role, professionalCardNumber, birthday } = req.body;
+        const { firstName, lastName, email, password, numberPhone, judicialCouncil, role, professionalCardNumber } = req.body;
         try {
             let actor1 = await Actor1.findOne({ numberPhone });
+            let actor2 = await Actor1.findOne({ email });
 
-            if (actor1) {
+            if (actor1 || actor2) {
                 return res
                     .status(400)
-                    .json({ errors: [{ msg: "Actor1 already exists" }] });
+                    .json({ errors: [{ msg: "user already exists" }] });
             }
 
             actor1 = new Actor1({
-                firstName, lastName, email, password, numberPhone, judicialCouncil,role, professionalCardNumber, birthday
+                firstName, lastName, email, password, numberPhone, judicialCouncil, role, professionalCardNumber
             });
 
             const salt = await bcrypt.genSalt(10);
@@ -119,10 +119,10 @@ router.post(
 
             jwt.sign(
                 payload,
-                process.env.jwtSecret  || "mysecrettoken",
+                process.env.jwtSecret || "mysecrettoken",
                 (err, token) => {
                     if (err) throw err;
-                    res.json({ token });
+                    res.status(200).json({ token });
                 }
             );
         } catch (err) {

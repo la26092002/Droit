@@ -47,4 +47,4 @@ app.use('/api/consultantsLawyers', require('./routes/api/consultantsLawyers'));
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => console.log(`SERVER 192.168.1.4 STARTED ON PORT ${PORT}`));
+app.listen(PORT, () => console.log(`SERVER 192.168.21.241 STARTED ON PORT ${PORT}`));
