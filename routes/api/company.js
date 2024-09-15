@@ -47,7 +47,7 @@ router.post(
 //@route    GET /api/company
 //@desc     Get all company
 //@access   Public
-router.get('/', authAdmin, async (req, res) => {
+router.get('/', async (req, res) => {
 
     try {
         company = await Company.find().sort({ date: -1 });
