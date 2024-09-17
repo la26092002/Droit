@@ -16,9 +16,12 @@ module.exports = function(req, res ,next){
     try{
         const decoded = jwt.verify(token, process.env.jwtSecret)
 
+        if (decoded.status === false) {
+            res.status(403).json({msg : "you don't have a subscription"})
+        }
         req.id = decoded.id;
         next();
     }catch(err){
-        res.status(401).json({msh : 'Token is not valid'})
+        res.status(401).json({msg : 'Token is not valid'})
     }
 }
