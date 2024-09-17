@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema;
+
 const judicialCouncilSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -15,4 +15,4 @@ const judicialCouncilSchema = new mongoose.Schema({
     },
 });
 
-module.exports = Product = mongoose.model('judicialCouncil', judicialCouncilSchema);
+module.exports = mongoose.model('judicialCouncil', judicialCouncilSchema);

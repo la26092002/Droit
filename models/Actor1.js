@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const Acor1Schema = new mongoose.Schema({
+
+const Actor1Schema = new mongoose.Schema({
     firstName: {
         type: String,
         require: true
@@ -60,4 +60,4 @@ const Acor1Schema = new mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model('actor1', Acor1Schema);
+module.exports = mongoose.model('actor1', Actor1Schema);

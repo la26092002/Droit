@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require("express-validator");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+
 //const Order = require("../../models/Order");
 const Actor1 = require("../../models/Actor1");
 require('dotenv').config();
@@ -10,6 +9,14 @@ require('dotenv').config();
 //const auth = require('../../middleware/auth')
 
 const authAdmin = require('../../middleware/authAdmin')
+
+
+
+
+router.get("/get", async (req, res) => {
+   console.log("hello")
+});
+
 
 //@route    Get api/consultantsLawyers/NotAuth
 //@desc     Get All
@@ -52,7 +59,7 @@ router.get("/NotAuth/", async (req, res) => {
 
 
         // Find actors based on the search criteria
-        const actors = await Actor1.find(searchCriteria).select('-password').skip(startIndex).limit(limit);
+        const actors = await Actor1.find(searchCriteria).populate('role').populate('judicialCouncil').select('-password').skip(startIndex).limit(limit);
         if (!actors) {
             return res.status(400).json({ msg: "There is no users" });
         }
@@ -111,7 +118,7 @@ router.get("/auth", authAdmin, async (req, res) => {
         const startIndex = (page - 1) * limit;
 
         const total = await Actor1.countDocuments(searchCriteria);
-        const actors = await Actor1.find(searchCriteria)
+        const actors = await Actor1.find(searchCriteria).populate('role').populate('judicialCouncil')
             .select('-password')
             .skip(startIndex)
             .limit(limit);
