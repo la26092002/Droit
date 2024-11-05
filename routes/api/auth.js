@@ -3,8 +3,17 @@ const router = express.Router();
 const { check, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const Actor1 = require("../../models/Actor1");
+const Actor1 = require("../../models/Actor");
+
+
+const fs = require('fs');
+const path = require('path');
+const { upload, processFileData, processPDF, convertToPDF } = require('../../Functions/PdfFunctions');
+
+
+
 require('dotenv').config();
+
 
 // @route    POST api/auth
 // @desc     Authenticate user and get token
@@ -24,7 +33,7 @@ router.post(
     const { numberPhone, password } = req.body;
 
     try {
-      let actor = await Actor1.findOne({ numberPhone });
+      let actor = await Actor1.findOne({ telephone:numberPhone });
       if (!actor) {
         return res.status(400).json({ errors: [{ msg: "User does not exist" }] });
       }
@@ -35,26 +44,25 @@ router.post(
       }
 
       const payload = {
-        actor1: {
+        actor: {
           id: actor.id,
+          category: actor.category,
           status: actor.status
         }
       };
 
-      const msg = actor.status ? "You have a subscription" : "You don't have a subscription";
-      const statusCode = actor.status ? 200 : 403;
+
 
       jwt.sign(
         payload,
-        process.env.JWT_SECRET || "mysecrettoken",
-        { expiresIn: '1h' }, // Token expiration (optional)
+        process.env.JWT_SECRET || "mysecrettoken", // Token expiration (optional)
         (err, token) => {
           if (err) throw err;
-          res.status(statusCode).json({
+          res.status(200).json({
             token,
-            msg,
+            msg: "Log in successful",
             name: actor.name,
-            numberPhone: actor.numberPhone,
+            numberPhone: actor.telephone,
             email: actor.email
           });
         }
@@ -70,14 +78,13 @@ router.post(
 // @desc     Register user
 // @access   Public
 router.post(
-  "/register",
+  "/register", upload.single('file'),
   [
-    check("firstName", "First name is required").not().isEmpty(),
-    check("lastName", "Last name is required").not().isEmpty(),
-    check("professionalCardNumber", "Professional card number is required").not().isEmpty(),
-    check("judicialCouncil", "Judicial council is required").not().isEmpty(),
-    check("role", "Role is required").not().isEmpty(),
-    check("numberPhone", "Please include a valid phone number").isMobilePhone(),
+    check("nom", "Name is required").not().isEmpty(),
+    check("prenom", "Prenom is required").not().isEmpty(),
+    check("willaya", "willaya is required").not().isEmpty(),
+    check("category", "category is required").not().isEmpty(),
+    check("telephone", "Please include a valid phone number").isMobilePhone(),
     check("email", "Please include a valid email").isEmail(),
     check("password", "Password must be 6 or more characters").isLength({ min: 6 })
   ],
@@ -87,10 +94,29 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { firstName, lastName, email, password, numberPhone, judicialCouncil, role, professionalCardNumber } = req.body;
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
 
+    const uploadedFile = req.file;
+    const fileName = uploadedFile.filename; // Generated filename
+    const filePath = path.join('authUploads', fileName); // Full file path
+    const fileData = fs.readFileSync(filePath); // Read the file
+
+    // Processing the file (PDF or converting)
+    if (uploadedFile.mimetype === 'application/pdf') {
+      await processPDF(filePath, res); // Process PDF directly
+    } else {
+      const convertedFilePath = await convertToPDF(filePath); // Convert file to PDF
+      await processPDF(convertedFilePath, res); // Process converted PDF
+    }
+
+
+    const { nom, prenom, telephone, email, willaya, category, password } = req.body;
+
+    const dataPdf = fileName;
     try {
-      let existingUserByPhone = await Actor1.findOne({ numberPhone });
+      let existingUserByPhone = await Actor1.findOne({ telephone });
       let existingUserByEmail = await Actor1.findOne({ email });
 
       if (existingUserByPhone || existingUserByEmail) {
@@ -98,14 +124,7 @@ router.post(
       }
 
       let actor = new Actor1({
-        firstName,
-        lastName,
-        email,
-        password,
-        numberPhone,
-        judicialCouncil,
-        role,
-        professionalCardNumber
+        nom, prenom, telephone, email, willaya, category, dataPdf, password
       });
 
       const salt = await bcrypt.genSalt(10);
@@ -114,13 +133,14 @@ router.post(
       await actor.save();
 
       const payload = {
-        actor1: {
+        actor: {
           id: actor.id,
+          category: actor.category,
           status: actor.status
         }
       };
 
-      
+
       //const statusCode = actor.status ? 200 : 403;
 
       jwt.sign(

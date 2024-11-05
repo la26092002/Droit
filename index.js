@@ -40,12 +40,12 @@ app.get('/hello', (req, res) => {
 
 // Define Routes
 app.use('/api/auth', require('./routes/api/auth'));
-app.use('/api/DataInserted', require('./routes/api/insertedData'));
-app.use('/api/consultation', require('./routes/api/consultation'));
-app.use('/api/company', require('./routes/api/company'));
-app.use('/api/admin', require('./routes/api/admin'));
+//app.use('/api/DataInserted', require('./routes/api/insertedData'));
+//app.use('/api/consultation', require('./routes/api/consultation'));
+//app.use('/api/company', require('./routes/api/company'));
+//app.use('/api/admin', require('./routes/api/admin'));
 
-app.use('/api/consultantsLawyers', require('./routes/api/consultantsLawyers'));
+//app.use('/api/consultantsLawyers', require('./routes/api/consultantsLawyers'));
 //consultantsLawyers
 
 

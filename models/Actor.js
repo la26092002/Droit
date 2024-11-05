@@ -1,46 +1,43 @@
 const mongoose = require('mongoose');
 
-const Actor1Schema = new mongoose.Schema({
-    firstName: {
+const ActorSchema = new mongoose.Schema({
+    nom: {
         type: String,
         require: true
     },
-    lastName: {
+    prenom: {
         type: String,
         require: true
+    },
+    telephone: {
+        type: String,
+        require: true,
+        unique: true
     },
     email: {
         type: String,
         require: true,
         unique: true
     },
+    willaya: {
+        type: String,
+        require: true
+    },
+    category: {
+        type: String,
+        require: true
+    },
+    dataPdf: {
+        type: String,
+        require: true
+    },
     password: {
         type: String,
         require: true
     },
-    birthday: {
-        type: String,
-        require: true
-    },
-    numberPhone: {
-        type: String,
-        require: true
-    },
-    professionalCardNumber: {
-        type: String,
-        require: true
-    },
-    judicialCouncil: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'judicialCouncil'
-    },
-    role: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'role'
-    },
     status: {
         type: Boolean,
-        default: false,
+        default: true,
     },
     subscribes: [
         {
@@ -60,4 +57,4 @@ const Actor1Schema = new mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model('actor1', Actor1Schema);
+module.exports = mongoose.model('actor', ActorSchema);
